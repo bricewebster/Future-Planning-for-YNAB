@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import SectionContent from "./SectionContent.svelte";
 </script>
 <div class="content">
-    <SectionContent title="Inflow"/>
-    <SectionContent title="Outflow"/>
+    <SectionContent title="Inflow" monthAmount='$3000'/>
+    <SectionContent title="Outflow" monthAmount='$2800'/>
 </div>
 <style>
     .content {

@@ -1,11 +1,11 @@
 <script lang="ts">
-    // your script goes here
+    export let futureStatus: string;
 </script>
 <div class="content">
     <div class="nav-container">
         <span class="material-icons-round md-48 menu">menu</span>
         <p class="title">Future Planning for YNAB</p>
-        <p class="planning-status">You can make it until:<br/><span>> 1 year</span></p>
+        <p class="planning-status">You can make it until:<br/><span>{futureStatus}</span></p>
     </div>
 </div>
 <style>
@@ -24,7 +24,6 @@
         width: 100%;
     }
     .menu {
-
         color: white;
 
         cursor: pointer;

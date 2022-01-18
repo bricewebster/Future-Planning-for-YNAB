@@ -18,8 +18,8 @@
 <div class="content">
     <div class="card-container">
         <span class="material-icons-round md-28 remove-icon" on:click={() => removeCard()}>remove_circle</span>
-        <p class="card-label">{data.Name}</p>
-        <p class="card-amount">{data.Amount}</p>
+        <input class="card-label" bind:value={data.Name}>
+        <input class="card-amount" bind:value={data.Amount}>
     </div>
 </div>
 <style lang="scss">
@@ -44,5 +44,10 @@
     }
     .remove-icon {
         cursor: pointer;
+    }
+    input {
+        width: 100px;
+
+        text-align: right;
     }
 </style>

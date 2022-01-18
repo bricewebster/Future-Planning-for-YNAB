@@ -1,9 +1,53 @@
 <script lang="ts">
     import Card from './Card.svelte';
-    import CardDataStore from '../stores/cardDataStore';
+    import CardDataStore, { cardDataStore } from '../stores/cardDataStore';
+    import AddCardPopup from './AddCardPopup.svelte';
 
     export let title: string;
     export let monthAmount: string;
+
+    let showPopup = false;
+    let popupTitle = '';
+
+    /**
+     * Default the provided section of cards back to the budget ones.
+     * @param {String} section the section to default
+     */
+    function defaultCards (section: string) {
+        if (section === 'balances') {
+            for (let balance of $CardDataStore.Balance) {
+                if (balance.isFromBudget) {
+                    balance.deleteFlag = false;
+                } else {
+                    balance.deleteFlag = true;
+                }
+            }
+        } else if (section === 'income') {
+            for (let income of $CardDataStore.Income) {
+                if (income.isFromBudget) {
+                    income.deleteFlag = false;
+                } else {
+                    income.deleteFlag = true;
+                }
+            }
+        }
+        $CardDataStore = $CardDataStore;
+    }
+
+    /**
+     * Add a new card to the section provided.
+     * @param section
+     */
+    function addCard (section: string) {
+        popupTitle = section;
+        togglePopup();
+    }
+    /**
+     * Opens and closes the trans list popup.
+     */
+    function togglePopup () {
+        showPopup = !showPopup;
+    }
 </script>
 <div class="content">
     <div class="title-container">
@@ -13,7 +57,7 @@
         <div class="section-container">
             <div class="section-title-container">
                 <p>Balances</p>
-                <span class="material-icons-round md-28">refresh</span>
+                <span class="material-icons-round md-28" on:click="{() => defaultCards('balances')}">refresh</span>
             </div>
             <div class="cards-container">
                 {#each $CardDataStore.Balance as balance}
@@ -22,16 +66,15 @@
                     {/if}
                 {/each}
             </div>
-            <div class="cards-add-container">
+            <div class="cards-add-container" on:click="{() => addCard('Balance')}">
                 <span class="material-icons-round md-28">add_circle</span>
                 <p>Add Balance</p>
-                <p></p>
             </div>
         </div>
         <div class="section-container">
             <div class="section-title-container">
                 <p>Income</p>
-                <span class="material-icons-round md-28">refresh</span>
+                <span class="material-icons-round md-28" on:click="{() => defaultCards('income')}">refresh</span>
             </div>
             <div class="cards-container">
                 {#each $CardDataStore.Income as income}
@@ -40,7 +83,7 @@
                     {/if}
                 {/each}
             </div>
-            <div class="cards-add-container">
+            <div class="cards-add-container" on:click="{() => addCard('Income')}">
                 <span class="material-icons-round md-28">add_circle</span>
                 <p>Add Income</p>
             </div>
@@ -48,6 +91,11 @@
     {:else}
         <p>outflow</p>
     {/if}
+    {#if showPopup}
+        <div class="backdrop" on:click|self={() => togglePopup()}>
+            <AddCardPopup {popupTitle} {togglePopup}/>
+        </div>
+    {/if}   
 </div>
 <style lang="scss">
     .content {
@@ -113,4 +161,16 @@
     .cards-container {
         margin-top: 10px;
     }
+    .backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        z-index: 10;
+        overflow-y: auto;
+    }
+
 </style>

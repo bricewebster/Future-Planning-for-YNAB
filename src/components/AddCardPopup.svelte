@@ -13,6 +13,8 @@
             sectionPopupData = $CardDataStore.Balance;
         } else if (popupTitle === 'Income') {
             sectionPopupData = $CardDataStore.Income;
+        } else {
+            sectionPopupData = $CardDataStore.Expense;
         }
 
     }
@@ -29,6 +31,8 @@
             $CardDataStore.Balance.push({Id: newCardId, Name: newCardName, Amount: newCardAmount, deleteFlag: newCardDeleteFlag, isFromBudget: newCardIsFromBudget});
         } else if (popupTitle === 'Income') {
             $CardDataStore.Income.push({Id: newCardId, Name: newCardName, Amount: newCardAmount, deleteFlag: newCardDeleteFlag, isFromBudget: newCardIsFromBudget});
+        } else {
+            $CardDataStore.Expense.push({Id: newCardId, Name: newCardName, Amount: newCardAmount, deleteFlag: newCardDeleteFlag, isFromBudget: newCardIsFromBudget});
         }
         $CardDataStore = $CardDataStore;
 
@@ -46,6 +50,8 @@
               $CardDataStore.Balance[selectedRadioButton].deleteFlag = false;
             } else if (popupTitle === 'Income') {
                 $CardDataStore.Income[selectedRadioButton].deleteFlag = false;
+            } else {
+                $CardDataStore.Expense[selectedRadioButton].deleteFlag = false;
             }
             togglePopup();
             return;
@@ -79,14 +85,20 @@
         position: relative;
 
         width: 250px;
-        height: 300px;
+        height: 250px;
 
         background: white;
         border-radius: 5px;
         box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2);
     }
     .content.Balance {
-        margin: 425px 0 0 375px;
+        margin: 420px 0 0 375px;
+    }
+    .content.Income {
+        margin: 670px 0 0 375px;
+    }
+    .content.Expense {
+        margin: 670px 0 0 1325px;
     }
     .content::after {
         position: absolute;
@@ -105,37 +117,40 @@
 
         margin: 0 auto;
         width: 95%;
-        height: 290px;
+        height: 250px;
     }
     .section-options {
         margin-top: 10px;
 
         width: 100%;
-        height: 210px;
+        height: 150px;
 
         overflow-y: scroll;
     }
     .title {
         display: block;
         
-        margin: 0 auto;
         padding-top: 10px;
-        width: 100px;
+        width: 100%;
 
         font-weight: bold;
+        text-align: center;
     }
     label {
         display: block;
     }
+    .button-container {
+        margin-top: 15px;
+    }
     .add-section {
         float: left;
 
-        margin-left: 10px;
+        margin-left: 5px;
     }
     .save-section {
         float: right;
 
-        margin-right: 10px;
+        margin-right: 5px;
     }
 </style>
 

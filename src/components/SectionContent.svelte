@@ -30,6 +30,14 @@
                     income.deleteFlag = true;
                 }
             }
+        } else {
+            for (let income of $CardDataStore.Expense) {
+                if (income.isFromBudget) {
+                    income.deleteFlag = false;
+                } else {
+                    income.deleteFlag = true;
+                }
+            }
         }
         $CardDataStore = $CardDataStore;
     }
@@ -41,6 +49,20 @@
     function addCard (section: string) {
         popupTitle = section;
         togglePopup();
+    }
+    
+    function removeCard (event) {
+        const cardId = event.detail.Id;
+        const cardSection = event.detail.Section;
+
+        if (cardSection === 'balance') {
+            $CardDataStore.Balance.find(({Id}) => Id === cardId).deleteFlag = true;
+        } else if (cardSection === 'income') {
+            $CardDataStore.Income.find(({Id}) => Id === cardId).deleteFlag = true;
+        } else {
+            $CardDataStore.Expense.find(({Id}) => Id === cardId).deleteFlag = true;
+        }
+        $CardDataStore = $CardDataStore;
     }
     /**
      * Opens and closes the trans list popup.
@@ -59,10 +81,10 @@
                 <p>Balances</p>
                 <span class="material-icons-round md-28" on:click="{() => defaultCards('balances')}">refresh</span>
             </div>
-            <div class="cards-container">
+            <div class="cards-container inflow">
                 {#each $CardDataStore.Balance as balance}
                     {#if !balance.deleteFlag}
-                        <Card section='balance' bind:data={balance}/>
+                        <Card section='balance' bind:data={balance} on:removeCard={removeCard}/>
                     {/if}
                 {/each}
             </div>
@@ -76,10 +98,10 @@
                 <p>Income</p>
                 <span class="material-icons-round md-28" on:click="{() => defaultCards('income')}">refresh</span>
             </div>
-            <div class="cards-container">
+            <div class="cards-container inflow">
                 {#each $CardDataStore.Income as income}
                     {#if !income.deleteFlag}
-                        <Card section='income' bind:data={income}/>
+                        <Card section='income' bind:data={income} on:removeCard={removeCard}/>
                     {/if}
                 {/each}
             </div>
@@ -89,7 +111,23 @@
             </div>
         </div>
     {:else}
-        <p>outflow</p>
+        <div class="section-container">
+            <div class="section-title-container">
+                <p>Expense</p>
+                <span class="material-icons-round md-28" on:click="{() => defaultCards('expense')}">refresh</span>
+            </div>
+            <div class="cards-container outflow">
+                {#each $CardDataStore.Expense as expense}
+                    {#if !expense.deleteFlag}
+                        <Card section='expense' bind:data={expense} on:removeCard={removeCard}/>
+                    {/if}
+                {/each}
+            </div>
+            <div class="cards-add-container" on:click="{() => addCard('Expense')}">
+                <span class="material-icons-round md-28">add_circle</span>
+                <p>Add Expense</p>
+            </div>
+        </div>
     {/if}
     {#if showPopup}
         <div class="backdrop" on:click|self={() => togglePopup()}>
@@ -130,8 +168,7 @@
         align-items: center;
         justify-content: center;
 
-        margin: 0 auto;
-        width: 130px;
+        margin: 15px auto 0 auto;
 
         cursor: pointer;
 
@@ -159,7 +196,16 @@
         }
     }
     .cards-container {
-        margin-top: 10px;
+        overflow-y: auto;
+
+        &.inflow {
+            margin-top: 10px;
+            height: 140px;
+        }
+        &.outflow {
+            margin-top: 10px;
+            height: 388px;
+        }
     }
     .backdrop {
         position: fixed;

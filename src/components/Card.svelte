@@ -1,23 +1,15 @@
 <script lang="ts">
-    import CardDataStore from '../stores/cardDataStore';
+    import { createEventDispatcher } from 'svelte';
 
     export let data = {};
-    export let section : string;
+    export let section: string;
 
-    function removeCard () {
-        const cardId = data.Id;
+    const dispatch = createEventDispatcher();
 
-        if (section === 'balance') {
-            $CardDataStore.Balance.find(({Id}) => Id === cardId).deleteFlag = true;
-        } else if (section === 'income') {
-            $CardDataStore.Income.find(({Id}) => Id === cardId).deleteFlag = true;
-        }
-        $CardDataStore = $CardDataStore;
-    }
 </script>
 <div class="content">
     <div class="card-container">
-        <span class="material-icons-round md-28 remove-icon" on:click={() => removeCard()}>remove_circle</span>
+        <span class="material-icons-round md-28 remove-icon" on:click={() => dispatch('removeCard', {Id: data.Id, Section: section}) }>remove_circle</span>
         <input class="card-label" bind:value={data.Name}>
         <input class="card-amount" bind:value={data.Amount}>
     </div>
